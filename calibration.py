@@ -34,6 +34,10 @@ imgpointsR = [] # 2d points in image plane RIGHT.
 # imagesLeft = glob.glob('images/stereoLeft/*.png')
 imagesRight = glob.glob('images/stereoRight/*.png')
 
+
+
+
+
 # for imgLeft, imgRight in zip(imagesLeft, imagesRight):
 for imgRight in imagesRight:
 
@@ -47,13 +51,32 @@ for imgRight in imagesRight:
     retR, thresholdR = cv.threshold(grayR, 180, 255, cv.THRESH_BINARY)
 
     # cv.imshow('imgL', thresholdL)
-    cv.imshow('imgR', thresholdR)
-    cv.waitKey(1000)
+    # cv.imshow('imgR', thresholdR)
+    # cv.waitKey(1000)
 
     # Find the chess board corners
     # retL, cornersL = cv.findChessboardCorners(thresholdL, chessboardSize, None)
     retR, cornersR = cv.findChessboardCorners(thresholdR, chessboardSize, None)
-    # retR, figures = cv.goodFeaturesToTrack()
+    corners = cv.goodFeaturesToTrack(grayR, maxCorners=100, qualityLevel=0.3, minDistance=7)
+
+    corners = np.int0(corners)
+
+    print(corners)
+
+    for corner in corners:
+        
+        x, y = corner.ravel()
+        # print(str(x) + ',' + str(y))
+        cv.circle(imgR, (x, y), 3, (0, 0, 255), -1)
+
+    # Display the image
+    cv.imshow('Corners', imgR)
+    cv.waitKey(0)
+    cv.destroyAllWindows()
+
+    # cv.imshow('imgR', figures)
+    # cv.waitKey(1000)
+
 
     # print(cornersL)
     print(cornersR)
